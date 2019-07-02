@@ -10,9 +10,7 @@ echarts.registerTheme('tdTheme', tdTheme);
 export default {
     name: 'ChartPie',
     props: {
-        value: Array,
-        text: String,
-        subtext: String
+        value: Array
     },
     data() {
         return {
@@ -26,11 +24,17 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
-            let legend = this.value.map(_ => _.name);
+            var data = [
+                { value: 335, name: 'Insurance' },
+                { value: 135, name: 'Investment' },
+                { value: 1548, name: 'Credit card' },
+                { value: 310, name: 'Consultation' },
+                { value: 234, name: 'Complaint' }
+            ];
+            let legend = data.map(_ => _.name);
             let option = {
                 title: {
-                    text: this.text,
-                    subtext: this.subtext,
+                    text: 'The Proportion Of Calling type',
                     shadowColor: 'rgba(0, 0, 0, 0.5)',
                     shadowBlur: 20
                 },
@@ -41,7 +45,7 @@ export default {
                 legend: {
                     orient: 'vertical',
                     left: 'left',
-                    top: 'middle',
+                    top: 'bottom',
                     data: legend
                 },
                 series: [
@@ -49,7 +53,7 @@ export default {
                         type: 'pie',
                         radius: '55%',
                         center: ['65%', '60%'],
-                        data: this.value,
+                        data: data,
                         itemStyle: {
                             emphasis: {
                                 shadowBlur: 10,

@@ -30,13 +30,7 @@ export default {
                 subtext: this.subtext
             },
             tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    label: {
-                        backgroundColor: '#6a7985'
-                    }
-                }
+                trigger: 'axis'
             },
             grid: {
                 left: '1.2%',
@@ -75,6 +69,9 @@ export default {
                             color: '#19be6b'
                         }
                     },
+                    itemStyle: {
+                        color: '#19be6b'
+                    },
                     data: positiveData
                 },
                 {
@@ -82,6 +79,9 @@ export default {
                     type: 'line',
                     yAxisIndex: 0,
                     lineStyle: {
+                        color: '#ed4014'
+                    },
+                    itemStyle: {
                         color: '#ed4014'
                     },
                     areaStyle: {
@@ -100,6 +100,10 @@ export default {
                         color: '#2d8cf0',
                         width: 6
                     },
+                    itemStyle: {
+                        color: '#2d8cf0'
+                    },
+
                     data: positiveRate
                 }
             ]

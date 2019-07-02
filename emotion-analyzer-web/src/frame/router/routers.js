@@ -10,7 +10,7 @@ export default [
                 path: '/dashboard',
                 name: 'dashboard',
                 icon: '',
-                component: () => import('_views/dashboard.vue')
+                component: () => import('_views/dashboard/dashboard.vue')
             }
         ]
     },
