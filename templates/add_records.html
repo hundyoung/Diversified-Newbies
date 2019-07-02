@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+    <br/>
+    <h2>Add Audio Records</h2>
+    {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+    <form action="/upload_records" method=post enctype=multipart/form-data>
+        <table>
+            <dl>
+                <dt>Customer's ID:
+                <dd><input type=text name=customer_id>
+                <dt>Employee's ID:
+                <dd><input type=text name=employee_id>
+                <dt>Record's Type:
+                <dd>
+                <select name=type>
+                    {%  for type in types %}
+                    <option value="{{ type.type_id }}">{{ type.type_name }}</option>
+                    {% endfor %}
+                </select>
+                <dt>Select File:
+                <dd><input type=file name=file>
+            </dl>
+        </table>
+        <input type=submit value=Submit>
+    </form>
+{% endblock %}

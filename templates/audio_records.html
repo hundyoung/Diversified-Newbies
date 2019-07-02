@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Audio Records</h2>
+    {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+    <form action="{{ url_for('analysis') }}" method=post>
+        <table>
+            <thead>
+                <tr>
+                    <th>record_id</th>
+                    <th>record_name</th>
+                    <th>record_date</th>
+                    <th>type</th>
+                    <th>employee_id</th>
+                    <th>customer_id</th>
+                    <th>options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                    <tr>
+                        <td>{{ entry.record_id }}</td>
+                        <input type=text name=record_id value="{{ entry.record_id }}" hidden>
+                        <td>{{ entry.record_name }}</td>
+                        <input type=text name=record_name value="{{ entry.record_name }}" hidden>
+                        <td>{{ entry.record_date }}</td>
+                        <input type=text name=record_date value="{{ entry.record_date }}" hidden>
+                        <td>{{ entry.type }}</td>
+                        <input type=text name=type value="{{ entry.type }}" hidden>
+                        <td>{{ entry.employee_id }}</td>
+                        <input type=text name=employee_id value="{{ entry.employee_id }}" hidden>
+                        <td>{{ entry.customer_id }}</td>
+                        <input type=text name=customer_id value="{{ entry.customer_id }}" hidden>
+                        <td><input type="submit" id="analysis" value="Analysis"/></td>
+                    </tr>
+                {% else %}
+                    <tr><td>Unbelievable.  No entries here so far</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+    <form action="{{ url_for('add_records') }}" method=get>
+        <input type="submit" id="add_records" value="Add Audio Records"/>
+    </form>
+{% endblock %}
