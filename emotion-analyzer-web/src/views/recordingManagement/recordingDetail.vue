@@ -37,7 +37,7 @@
                     </div>
                 </i-col>
                 <i-col span="6" class="formCol">
-                    <Divider orientation="left">Emotion Analyzer</Divider>
+                    <Divider orientation="left">Sentiment Analyzer</Divider>
                     <div>
                         <Timeline>
                             <TimelineItem>

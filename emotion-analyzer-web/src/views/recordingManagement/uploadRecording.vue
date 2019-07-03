@@ -124,7 +124,7 @@ export default {
                 return false;
             }
             if (this.uploadDataObject.record_type === '') {
-                this.$Message.error('You must select Record Type');
+                this.$Message.error('You must select recording Type');
                 this.$refs.uploadCom.clearFiles();
                 return false;
             }

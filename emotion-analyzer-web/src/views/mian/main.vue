@@ -1,7 +1,7 @@
 <template>
     <Layout style="height: 100%" class="main">
         <Header class="header">
-            <span @click="reload">Emotion Analyzer</span>
+            <span @click="reload">Sentiment Analyzer Portal</span>
         </Header>
         <Layout class="mainContentLayout">
             <Sider class="mainContentLayoutSider" :width="248">

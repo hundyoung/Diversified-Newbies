@@ -7,7 +7,7 @@
                     <strong>{{ row.staffName }}</strong>
                 </template>
                 <template slot-scope="{ row }" slot="goodPerformancePercentage">
-                    <span> {{ Math.round((row.todayCheerCalls / row.todayCall) * 10000) / 100 }} &nbsp;%</span>
+                    <span> {{ Math.round((row.todayPositiveCalls / row.todayCall) * 10000) / 100 }} &nbsp;%</span>
                 </template>
                 <template slot-scope="{ row }" slot="action">
                     <Button type="primary" size="small" style="margin-right: 5px" @click="view(row)">
@@ -41,13 +41,13 @@ export default {
                     align: 'center'
                 },
                 {
-                    title: 'Today cheer calls',
-                    key: 'todayCheerCalls',
+                    title: 'Today Positive calls',
+                    key: 'todayPositiveCalls',
                     align: 'center'
                 },
                 {
-                    title: 'Today upset calls',
-                    key: 'todayUpsetCalls',
+                    title: 'Today Negative calls',
+                    key: 'todayNegativeCalls',
                     align: 'center'
                 },
                 {
@@ -66,62 +66,62 @@ export default {
                 {
                     staffName: 'John',
                     todayCall: 15,
-                    todayCheerCalls: 10,
-                    todayUpsetCalls: 5
+                    todayPositiveCalls: 10,
+                    todayNegativeCalls: 5
                 },
                 {
                     staffName: 'Michael',
                     todayCall: 18,
-                    todayCheerCalls: 9,
-                    todayUpsetCalls: 9
+                    todayPositiveCalls: 9,
+                    todayNegativeCalls: 9
                 },
                 {
                     staffName: 'Sam',
                     todayCall: 33,
-                    todayCheerCalls: 30,
-                    todayUpsetCalls: 3
+                    todayPositiveCalls: 30,
+                    todayNegativeCalls: 3
                 },
                 {
                     staffName: 'William',
                     todayCall: 25,
-                    todayCheerCalls: 11,
-                    todayUpsetCalls: 14
+                    todayPositiveCalls: 11,
+                    todayNegativeCalls: 14
                 },
                 {
                     staffName: 'Dennis',
                     todayCall: 16,
-                    todayCheerCalls: 9,
-                    todayUpsetCalls: 7
+                    todayPositiveCalls: 9,
+                    todayNegativeCalls: 7
                 },
                 {
                     staffName: 'James',
                     todayCall: 17,
-                    todayCheerCalls: 10,
-                    todayUpsetCalls: 7
+                    todayPositiveCalls: 10,
+                    todayNegativeCalls: 7
                 },
                 {
                     staffName: 'Emma',
                     todayCall: 28,
-                    todayCheerCalls: 15,
-                    todayUpsetCalls: 13
+                    todayPositiveCalls: 15,
+                    todayNegativeCalls: 13
                 },
                 {
                     staffName: 'Lucy',
                     todayCall: 13,
-                    todayCheerCalls: 7,
-                    todayUpsetCalls: 6
+                    todayPositiveCalls: 7,
+                    todayNegativeCalls: 6
                 },
                 {
                     staffName: 'Lily',
                     todayCall: 17,
-                    todayCheerCalls: 2,
-                    todayUpsetCalls: 15
+                    todayPositiveCalls: 2,
+                    todayNegativeCalls: 15
                 },
                 {
                     staffName: 'Kelly',
                     todayCall: 19,
-                    todayCheerCalls: 9,
-                    todayUpsetCalls: 10
+                    todayPositiveCalls: 9,
+                    todayNegativeCalls: 10
                 }
             ]
         };

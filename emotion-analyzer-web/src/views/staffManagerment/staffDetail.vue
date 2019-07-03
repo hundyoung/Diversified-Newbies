@@ -17,18 +17,20 @@
                         </FormItem>
                     </i-col>
                     <i-col span="6" class="formCol">
-                        <FormItem label="Today cheer calls">
-                            <Input v-model="staffDetail.todayCheerCalls" readonly></Input>
+                        <FormItem label="Number of Today Positive Calls">
+                            <Input v-model="staffDetail.todayPositiveCalls" readonly></Input>
                         </FormItem>
                     </i-col>
                     <i-col span="6" class="formCol">
-                        <FormItem label="Today upset calls">
-                            <Input v-model="staffDetail.todayUpsetCalls" readonly></Input>
+                        <FormItem label="Number of Today Negative calls">
+                            <Input v-model="staffDetail.todayNegativeCalls" readonly></Input>
                         </FormItem>
                     </i-col>
                     <i-col span="6" class="formCol">
-                        <FormItem label="Today performance evaluation">
-                            <span class="fa fa-thumbs-up fa-5x"></span>
+                        <FormItem label="Today Performance Evaluation">
+                            <div style="text-align:center;">
+                                <span class="fa fa-thumbs-up fa-5x"></span>
+                            </div>
                         </FormItem>
                     </i-col>
                 </Row>
@@ -84,8 +86,8 @@ export default {
             staffDetail: {
                 name: 'John',
                 todayCall: 20,
-                todayCheerCalls: 15,
-                todayUpsetCalls: 5
+                todayPositiveCalls: 15,
+                todayNegativeCalls: 5
             },
             columns: [
                 {
