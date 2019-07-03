@@ -66,26 +66,29 @@ class AudioRecords(db.Model):
                                                      self.customer_id, self.employee_id)
 
 
-@app.route('/')
+@app.route('/audio_records')
 def audio_records():
-    # customer = Customer.query.filter(Customer.customer_id == 2).first()
-    # key = "".join(random.choice("0123456789") for i in range(8))
-    # print(current_app.config['PATH'])
     audio_record = AudioRecords.query.all()
     entries = [dict(record_id=row.record_id, record_name=row.record_name, record_date=str(row.record_date),
                     type=row.type_id, employee_id=row.employee_id,
                     customer_id=row.customer_id) for row in audio_record]
-    result = EmotionClassify.getEmotions('TestAudio/test_4.wav')
-    # print(result)
-    for re in result:
-        start_time = re[0]
-        end_time = re[1]
-        status = re[2]
-        sr = StatusRecords(record_id=1, start_time=start_time, end_time=end_time, status=status)
-        db.session.add(sr)
-        db.session.commit()
+    return render_template('audio_records.html', entries=entries)
+    # return json.dumps(entries), 200, [("access-Control-Allow-Origin", "*")]
+
+
+@app.route('/audio_details')
+def audio_details():
+    record_id = request.args.get('record_id')
+    audio_record = AudioRecords.query.get(record_id)
+    status_record = StatusRecords.query.filter_by(record_id=record_id).all()
+    entries = {'record_id': audio_record.record_id, 'record_name': audio_record.record_name,
+                'record_date': str(audio_record.record_date), 'type': audio_record.type_id,
+                'employee_id': audio_record.employee_id, 'customer_id': audio_record.customer_id,
+                'analyzer_result': [dict(start_time=row.start_time, end_time=row.end_time, status=row.status)
+                                    for row in status_record]}
     # return render_template('audio_records.html', entries=entries)
-    return json.dumps(entries)
+    print(json.dumps(entries))
+    return json.dumps(entries), 200, [("access-Control-Allow-Origin", "*")]
 
 
 @app.route('/add_records')
@@ -112,23 +115,14 @@ def upload_records():
             ar = AudioRecords(record_name=filename, record_date=timekey, type_id=int(type_id),
                               customer_id=int(customer_id), employee_id=int(employee_id))
             db.session.add(ar)
+            db.session.flush()
+            record_id = ar.record_id
             db.session.commit()
+            auto_analysis(record_id, filename)
             return redirect(url_for('audio_records'))
         else:
             error = 'Invalid File Type'
     return render_template('add_records.html', error=error)
-
-
-@app.route('/analysis', methods=['POST', 'GET'])
-def analysis():
-    error = None
-    record_id = request.form['record_id']
-    record_name = request.form['record_name']
-    record_date = request.form['record_date']
-    type = request.form['type']
-    employee_id = request.form['employee_id']
-    customer_id = request.form['customer_id']
-    return "audio_records" + record_id
 
 
 def allowed_file(filename):
@@ -136,11 +130,17 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-# def auto_analysis(filename):
-
+def auto_analysis(record_id, filename):
+    result = EmotionClassify.getEmotions(current_app.config['FILE_PATH'] + filename)
+    for re in result:
+        start_time = re[0]
+        end_time = re[1]
+        status = re[2]
+        sr = StatusRecords(record_id=record_id, start_time=start_time, end_time=end_time, status=status)
+        db.session.add(sr)
+        db.session.commit()
 
 
 if __name__ == '__main__':
-    EmotionClassify.loadModel(current_app.config['MODEL_PATH'])
-    app.run(debug=True)
+    app.run()
 

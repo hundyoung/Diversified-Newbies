@@ -1,6 +1,6 @@
 class BaseConfig(object):
     NNN = 123
-    FILE_PATH = 'C:\\Users\\Administrator\\PycharmProjects\\File'
+    FILE_PATH = 'C:\\Users\\Administrator\\PycharmProjects\\File\\'
     MODEL_PATH = 'saved_models/Emotion_Voice_Detection_Model.h5'
 
 class TestConfig(BaseConfig):
