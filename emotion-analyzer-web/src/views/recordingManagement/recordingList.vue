@@ -34,8 +34,8 @@
             </Form>
             <Divider orientation="left" size="small">Data table</Divider>
             <Table border stripe :columns="columns" :data="tableData" height="520">
-                <template slot-scope="{ row }" slot="recordingName">
-                    <strong>{{ row.recordingName }}</strong>
+                <template slot-scope="{ row }" slot="record_name">
+                    <strong>{{ row.record_name }}</strong>
                 </template>
                 <template slot-scope="{ row }" slot="action">
                     <Button type="primary" size="small" style="margin-right: 5px" @click="view(row)">View</Button>
@@ -60,22 +60,27 @@ export default {
             columns: [
                 {
                     title: 'Recording Name',
-                    slot: 'recordingName',
+                    slot: 'record_name',
                     align: 'center'
                 },
                 {
-                    title: 'Lenth',
-                    key: 'lenth',
+                    title: 'Employee Id',
+                    key: 'employee_id',
                     align: 'center'
                 },
                 {
-                    title: 'Staff',
-                    key: 'staff',
+                    title: 'Record Date',
+                    key: 'record_date',
                     align: 'center'
                 },
                 {
-                    title: 'Upload Time',
-                    key: 'uploadTime',
+                    title: 'Record Id',
+                    key: 'record_id',
+                    align: 'center'
+                },
+                {
+                    title: 'Customer Id',
+                    key: 'customer_id',
                     align: 'center'
                 },
                 {
@@ -85,79 +90,34 @@ export default {
                     align: 'center'
                 }
             ],
-            tableData: [
-                {
-                    recordingName: '201906300001',
-                    lenth: '12:30',
-                    staff: 'John',
-                    uploadTime: '2019-06-30 15:30'
-                },
-                {
-                    recordingName: '201906300002',
-                    lenth: '09:24',
-                    staff: 'Michael',
-                    uploadTime: '2019-06-30 15:30'
-                },
-                {
-                    recordingName: '201906300004',
-                    lenth: '08:33',
-                    staff: 'Sam',
-                    uploadTime: '2019-06-30 15:30'
-                },
-                {
-                    recordingName: '2019070100004',
-                    lenth: '08:20',
-                    staff: 'Sam',
-                    uploadTime: '2019-06-30 15:30'
-                },
-                {
-                    recordingName: '2019070100134',
-                    lenth: '06:30',
-                    staff: 'Emma',
-                    uploadTime: '2019-06-30 15:30'
-                },
-                {
-                    recordingName: '201906300001',
-                    lenth: '12:30',
-                    staff: 'John',
-                    uploadTime: '2019-06-30 15:30'
-                },
-                {
-                    recordingName: '201906300002',
-                    lenth: '09:24',
-                    staff: 'Michael',
-                    uploadTime: '2019-06-30 15:30'
-                },
-                {
-                    recordingName: '201906300004',
-                    lenth: '08:33',
-                    staff: 'Sam',
-                    uploadTime: '2019-06-30 15:30'
-                },
-                {
-                    recordingName: '2019070100004',
-                    lenth: '08:20',
-                    staff: 'Sam',
-                    uploadTime: '2019-06-30 15:30'
-                },
-                {
-                    recordingName: '2019070100134',
-                    lenth: '06:30',
-                    staff: 'Emma',
-                    uploadTime: '2019-06-30 15:30'
-                }
-            ]
+            tableData: []
         };
     },
     methods: {
         toUpload() {
             this.$router.push('uploadRecording');
         },
-        view() {
-            this.$router.push('RecordingDetail');
+        view(row) {
+            this.$router.push({
+                path: 'RecordingDetail',
+                query: {
+                    record_id: row.record_id
+                }
+            });
         },
         remove() {}
     },
-    mounted() {}
+    mounted() {
+        let vm = this;
+        this.$ajax
+            .get('/audio_records')
+            .then(function(response) {
+                vm.tableData = response.data;
+                console.log(vm.tableData);
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    }
 };
 </script>

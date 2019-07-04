@@ -8,22 +8,22 @@
                 <Row>
                     <i-col span="6" class="formCol">
                         <FormItem label="Recording Name">
-                            <Input v-model="recording.recordingName" readonly></Input>
+                            <Input v-model="recording.record_name" readonly></Input>
                         </FormItem>
                     </i-col>
                     <i-col span="6" class="formCol">
-                        <FormItem label="Staff Name">
-                            <Input v-model="recording.staff" readonly></Input>
+                        <FormItem label="Employee Id">
+                            <Input v-model="recording.employee_id" readonly></Input>
                         </FormItem>
                     </i-col>
                     <i-col span="6" class="formCol">
-                        <FormItem label="lenth">
-                            <Input v-model="recording.lenth" readonly></Input>
+                        <FormItem label="Record Date">
+                            <Input v-model="recording.record_date" readonly></Input>
                         </FormItem>
                     </i-col>
                     <i-col span="6" class="formCol">
-                        <FormItem label="upload time">
-                            <Input v-model="recording.uploadTime" readonly></Input>
+                        <FormItem label="Record Name">
+                            <Input v-model="recording.record_name" readonly></Input>
                         </FormItem>
                     </i-col>
                 </Row>
@@ -40,25 +40,29 @@
                     <Divider orientation="left">Sentiment Analyzer</Divider>
                     <div>
                         <Timeline>
-                            <TimelineItem>
-                                <p class="time">01:00</p>
-                                <p class="content"><span class="fa fa-meh-o fa-3x"></span></p>
-                            </TimelineItem>
-                            <TimelineItem>
-                                <p class="time">06:00</p>
-                                <p class="content"><span class="fa fa-frown-o fa-3x"></span></p>
-                            </TimelineItem>
-                            <TimelineItem>
-                                <p class="time">08:30</p>
-                                <p class="content"><span class="fa fa-frown-o fa-3x"></span></p>
-                            </TimelineItem>
-                            <TimelineItem>
-                                <p class="time">04:00</p>
-                                <p class="content"><span class="fa fa-meh-o fa-3x"></span></p>
-                            </TimelineItem>
-                            <TimelineItem>
-                                <p class="time">09:37</p>
-                                <p class="content"><span class="fa fa-smile-o fa-3x"></span></p>
+                            <TimelineItem v-for="item in recording.analyzer_result" :key="item.end_time">
+                                <p class="time">{{ item.start_time / 1000 }} - {{ item.end_time / 1000 }}</p>
+                                <p class="content">
+                                    <span
+                                        v-if="item.status === 'female_happy' || item.status === 'male_angry'"
+                                        class="fa fa-smile-o fa-3x"
+                                    ></span>
+                                    <span
+                                        v-if="item.status === 'female_calm' || item.status === 'male_calm'"
+                                        class="fa fa-meh-o fa-3x"
+                                    ></span>
+                                    <span
+                                        v-if="
+                                            item.status === 'female_angry' ||
+                                                item.status === 'female_fearful' ||
+                                                item.status === 'female_sad' ||
+                                                item.status === 'male_sad' ||
+                                                item.status === 'male_fearful' ||
+                                                item.status === 'male_angry'
+                                        "
+                                        class="fa fa-frown-o fa-3x"
+                                    ></span>
+                                </p>
                             </TimelineItem>
                         </Timeline>
                     </div>
@@ -73,15 +77,20 @@ export default {
     components: {},
     data() {
         return {
-            recording: {
-                recordingName: '201906300001',
-                lenth: '09:40',
-                staff: 'John',
-                uploadTime: '2019-06-30 15:30'
-            }
+            recording: {}
         };
     },
     methods: {},
-    mounted() {}
+    mounted() {
+        let vm = this;
+        this.$ajax
+            .get('/audio_details?record_id=' + this.$route.query.record_id)
+            .then(function(response) {
+                vm.recording = response.data;
+            })
+            .catch(function(error) {
+                console.error(error);
+            });
+    }
 };
 </script>
