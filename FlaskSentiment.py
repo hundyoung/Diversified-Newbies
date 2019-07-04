@@ -10,10 +10,11 @@ ALLOWED_EXTENSIONS = set(['mp3', 'wav'])
 loaded_model = None
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@127.0.0.1:3306/semtiment"
+DB_PATH = app.config['DB_PATH']
+app.config["SQLALCHEMY_DATABASE_URI"] = DB_PATH
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['SQLALCHEMY_ECHO'] = True
-# app.config.from_object('settings.BaseConfig')
+# app.config.from_object('settings.BaseConfig') loaded in __init__
 # UPLOAD_FOLDER = current_app.config['PATH']
 # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -78,6 +79,7 @@ def audio_records():
 
 @app.route('/audio_details')
 def audio_details():
+    # record_id = request.args.get('record_id') check if the parm is submitted with form
     record_id = request.args.get('record_id')
     audio_record = AudioRecords.query.get(record_id)
     status_record = StatusRecords.query.filter_by(record_id=record_id).all()
