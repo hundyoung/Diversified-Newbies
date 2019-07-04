@@ -13,23 +13,11 @@
                     <i-col span="6" class="formCol">
                         <FormItem label="Employee Id">
                             <Input v-model="uploadDataObject.employee_id" readonly />
-                            <!-- <AutoComplete
-                                v-model="uploadDataObject.customer_id"
-                                :data="autoCompleteData"
-                                @on-search="autoCompleteDataOnSearch"
-                                placeholder="Search Customer ID"
-                            ></AutoComplete> -->
                         </FormItem>
                     </i-col>
                     <i-col span="6" class="formCol">
                         <FormItem label="Record Id">
                             <Input v-model="uploadDataObject.customer_id" readonly />
-                            <!-- <AutoComplete
-                                v-model="uploadDataObject.employee_id"
-                                :data="autoCompleteData1"
-                                @on-search="autoCompleteDataOnSearch1"
-                                placeholder="Search Customer ID"
-                            ></AutoComplete> -->
                         </FormItem>
                     </i-col>
                     <i-col span="12" class="formCol">
@@ -43,24 +31,6 @@
                     </i-col>
                     <i-col span="24" class="formCol">
                         <input name="file" type="file" id="fileInput" />
-                        <!-- <FormItem label="Record File ">
-                            <Upload
-                                ref="uploadCom"
-                                type="drag"
-                                action="//jsonplaceholder.typicode.com/posts/"
-                                :before-upload="beforeUpload"
-                                :data="uploadDataObject"
-                                :on-success="handleSuccess"
-                                :on-error="handleError"
-                                :format="['wav']"
-                                :headers="uploadHeader"
-                            >
-                                <div style="padding: 20px 0">
-                                    <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                                    <p>Click or drag files here to upload</p>
-                                </div>
-                            </Upload>
-                        </FormItem> -->
                     </i-col>
                     <i-col span="24" class="formCol">
                         <br />
@@ -96,6 +66,10 @@ export default {
         submit() {
             var vm = this;
             let param = new FormData();
+            if (document.getElementById('fileInput').value.indexOf('wav') < 0) {
+                this.$Message.info('Portal only accept .wav file');
+                return;
+            }
             param.append('customer_id', this.uploadDataObject.customer_id);
             param.append('employee_id', this.uploadDataObject.employee_id);
             param.append('type', this.uploadDataObject.record_type + '');
@@ -129,70 +103,6 @@ export default {
                     vm.$Spin.hide();
                     vm.$Message.error('Upload error.');
                 });
-        },
-        autoCompleteDataOnSearch(value) {
-            if (!value) {
-                this.autoCompleteData = [];
-            } else if (value.length < 8) {
-                this.autoCompleteData = [];
-                let length = 8 - value.length;
-                for (let i = 0; i < 5; i++) {
-                    let numberNew = value + '';
-                    for (let j = 0; j < length; j++) {
-                        numberNew += Math.floor(Math.random() * 10) + '';
-                    }
-                    this.autoCompleteData.push(numberNew);
-                }
-            }
-        },
-        autoCompleteDataOnSearch1(value) {
-            if (!value) {
-                this.autoCompleteData1 = [];
-            } else if (value.length < 8) {
-                this.autoCompleteData1 = [];
-                let length = 8 - value.length;
-                for (let i = 0; i < 5; i++) {
-                    let numberNew = value + '';
-                    for (let j = 0; j < length; j++) {
-                        numberNew += Math.floor(Math.random() * 10) + '';
-                    }
-                    this.autoCompleteData1.push(numberNew);
-                }
-            }
-        },
-        beforeUpload(file) {
-            this.file = file;
-            if (file.name.indexOf('wav') < 0) {
-                this.$Message.error('The portal only accept "wav" file');
-                this.$refs.uploadCom.clearFiles();
-                return false;
-            }
-            if (this.uploadDataObject.customer_id === '') {
-                this.$Message.error('You must input Customer Id');
-                this.$refs.uploadCom.clearFiles();
-                return false;
-            }
-            if (this.uploadDataObject.employee_id === '') {
-                this.$Message.error('You must input Employee Id');
-                this.$refs.uploadCom.clearFiles();
-                return false;
-            }
-            if (this.uploadDataObject.record_type === '') {
-                this.$Message.error('You must select recording Type');
-                this.$refs.uploadCom.clearFiles();
-                return false;
-            }
-            this.$Spin.show();
-        },
-        handleSuccess() {
-            this.$Spin.hide();
-            this.$Message.info('Upload completed.');
-            this.$router.push('RecordingList');
-        },
-        handleError() {
-            this.$refs.uploadCom.clearFiles();
-            this.$Spin.hide();
-            this.$Message.error('Upload error.');
         }
     },
     mounted() {
