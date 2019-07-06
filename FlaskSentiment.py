@@ -10,10 +10,6 @@ ALLOWED_EXTENSIONS = set(['mp3', 'wav'])
 loaded_model = None
 
 app = Flask(__name__)
-DB_PATH = app.config['DB_PATH']
-app.config["SQLALCHEMY_DATABASE_URI"] = DB_PATH
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config['SQLALCHEMY_ECHO'] = True
 # app.config.from_object('settings.BaseConfig') loaded in __init__
 # UPLOAD_FOLDER = current_app.config['PATH']
 # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -145,5 +141,12 @@ def auto_analysis(record_id, filename):
 
 
 if __name__ == '__main__':
+    app.config.from_object('settings.BaseConfig')
+    model_path = app.config['MODEL_PATH']
+    DB_PATH = app.config['DB_PATH']
+    app.config["SQLALCHEMY_DATABASE_URI"] = DB_PATH
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config['SQLALCHEMY_ECHO'] = True
+    EmotionClassify.loadModel(model_path=model_path)
     app.run()
 
