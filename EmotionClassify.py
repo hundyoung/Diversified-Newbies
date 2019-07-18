@@ -91,7 +91,7 @@ def getEmotions(audio_path):
         emotion = classifyEmotion(path=path)
         print(fileStr[0] + "_" + str(i) + "." + fileStr[1], emotion)
         result.append([time_start,time_start+segments_lengths[i],emotion])
-        time_start+=time_start+segments_lengths[i]
+        time_start=time_start+segments_lengths[i]
         # print(fileStr[0]+"_"+str(i)+"."+fileStr[1],classifyEmotion(path='03-01-01-01-01-01-03.wav',loaded_model=loaded_model))
     return result
 
