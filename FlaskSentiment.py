@@ -14,12 +14,7 @@ calm = ['female_calm', 'male_calm']
 positive_emotions = ['female_happy', 'male_happy']
 
 app = Flask(__name__)
-app.config[
-    "SQLALCHEMY_DATABASE_URI"] = "mysql://root:12345678@sentiment.cepghepnnhzt.ap-northeast-1.rds.amazonaws.com:3306/semtiment"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config['SQLALCHEMY_ECHO'] = True
-# app.config.from_object('settings.BaseConfig')
-# UPLOAD_FOLDER = current_app.config['PATH']
+# app.config.from_object('settings.BaseConfig')# UPLOAD_FOLDER = current_app.config['PATH']
 # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 db = SQLAlchemy(app)
@@ -78,12 +73,13 @@ def audio_records():
     entries = [dict(record_id=row.record_id, record_name=row.record_name, record_date=str(row.record_date),
                     type=row.type_id, employee_id=row.employee_id,
                     customer_id=row.customer_id) for row in audio_record]
-    return render_template('audio_records.html', entries=entries)
-    # return json.dumps(entries), 200, [("access-Control-Allow-Origin", "*")]
+    # return render_template('audio_records.html', entries=entries)
+    return json.dumps(entries), 200, [("access-Control-Allow-Origin", "*")]
 
 
 @app.route('/audio_details')
 def audio_details():
+    # record_id = request.args.get('record_id') check if the parm is submitted with form
     record_id = request.args.get('record_id')
     audio_record = AudioRecords.query.get(record_id)
     status_record = StatusRecords.query.filter_by(record_id=record_id).all()
@@ -101,10 +97,11 @@ def audio_details():
 def add_records():
     business = BusinessType.query.all()
     types = [dict(type_id=row.type_id, type_name=row.type_name, parent_type=row.parent_type) for row in business]
-    return render_template('add_records.html', types=types)
+    # return render_template('add_records.html', types=types)
+    return json.dumps(types), 200, [("access-Control-Allow-Origin", "*")]
 
 
-@app.route('/upload_records', methods=['POST', 'GET'])
+@app.route('/upload_records', methods=['POST', 'GET', 'OPTIONS'])
 def upload_records():
     error = None
     file = request.files['file']
@@ -126,10 +123,10 @@ def upload_records():
             db.session.commit()
             results = auto_analysis(record_id, filename)
 
-            return redirect(url_for('audio_records'))
+            # return redirect(url_for('audio_records'))
         else:
             error = 'Invalid File Type'
-    return render_template('add_records.html', error=error)
+    return 'Hello World!', 200,  [("access-Control-Allow-Origin", "*")]
 
 
 def allowed_file(filename):
@@ -197,4 +194,11 @@ def labelEmotion(emotion):
         return -1
 
 if __name__ == '__main__':
+    app.config.from_object('settings.BaseConfig')
+    model_path = app.config['MODEL_PATH']
+    DB_PATH = app.config['DB_PATH']
+    app.config["SQLALCHEMY_DATABASE_URI"] = DB_PATH
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config['SQLALCHEMY_ECHO'] = True
+    EmotionClassify.loadModel(model_path=model_path)
     app.run()
