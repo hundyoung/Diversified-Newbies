@@ -134,13 +134,13 @@ def allowed_file(filename):
 
 
 def auto_analysis(record_id, filename):
-    result = EmotionClassify.getEmotions(current_app.config['FILE_PATH'] + filename)
-    total_length = result[-1][1]
+    results = EmotionClassify.getEmotions(current_app.config['FILE_PATH'] + filename)
+    total_length = results[-1][1]
     first_section_end = total_length // 3
     last_section_start = first_section_end * 2
     first_vote_dict = {}
     last_vote_dict = {}
-    for re in result:
+    for re in results:
         start_time = re[0]
         end_time = re[1]
         status = re[2]
@@ -158,8 +158,10 @@ def auto_analysis(record_id, filename):
     first_section_emotion = labelEmotion(max(first_vote_dict, key=first_vote_dict.get))
     last_section_emotion = labelEmotion(max(last_vote_dict, key=last_vote_dict.get))
     result = last_section_emotion-first_section_emotion
-    audio_record = AudioRecords.query.filter(record_id == record_id).first()
-    audio_record.result = result
+    # audio_record = AudioRecords.query.filter(record_id == record_id).first()
+    # audio_record.result = result
+    AudioRecords.query.filter_by(record_id=record_id).update({'result': result})
+
     db.session.commit()
 
 def labelEmotion(emotion):
