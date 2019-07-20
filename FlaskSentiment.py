@@ -8,13 +8,10 @@ from flask_sqlalchemy import SQLAlchemy
 
 ALLOWED_EXTENSIONS = set(['mp3', 'wav'])
 loaded_model = None
-negative_emotions = ['female_angry', 'female_fearful', 'female_sad', 'male_angry',
-                     'male_fearful', 'male_sad']
-calm = ['female_calm', 'male_calm']
-positive_emotions = ['female_happy', 'male_happy']
 
 app = Flask(__name__)
-# app.config.from_object('settings.BaseConfig')# UPLOAD_FOLDER = current_app.config['PATH']
+# app.config.from_object('settings.BaseConfig') loaded in __init__
+# UPLOAD_FOLDER = current_app.config['PATH']
 # app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 db = SQLAlchemy(app)
@@ -60,7 +57,6 @@ class AudioRecords(db.Model):
     type_id = db.Column(db.Integer)
     customer_id = db.Column(db.Integer)
     employee_id = db.Column(db.Integer)
-    result = db.Column(db.String(30))
 
     def __repr__(self):
         return '<AudioRecords %s %s %s %s %s %s>' % (self.record_id, self.record_name, self.record_date, self.type_id,
@@ -84,10 +80,10 @@ def audio_details():
     audio_record = AudioRecords.query.get(record_id)
     status_record = StatusRecords.query.filter_by(record_id=record_id).all()
     entries = {'record_id': audio_record.record_id, 'record_name': audio_record.record_name,
-               'record_date': str(audio_record.record_date), 'type': audio_record.type_id,
-               'employee_id': audio_record.employee_id, 'customer_id': audio_record.customer_id, 'overall_evaluation': audio_record.result,
-               'analyzer_result': [dict(start_time=row.start_time, end_time=row.end_time, status=row.status)
-                                   for row in status_record]}
+                'record_date': str(audio_record.record_date), 'type': audio_record.type_id,
+                'employee_id': audio_record.employee_id, 'customer_id': audio_record.customer_id,
+                'analyzer_result': [dict(start_time=row.start_time, end_time=row.end_time, status=row.status)
+                                    for row in status_record]}
     # return render_template('audio_records.html', entries=entries)
     print(json.dumps(entries))
     return json.dumps(entries), 200, [("access-Control-Allow-Origin", "*")]
@@ -121,8 +117,7 @@ def upload_records():
             db.session.flush()
             record_id = ar.record_id
             db.session.commit()
-            results = auto_analysis(record_id, filename)
-
+            auto_analysis(record_id, filename)
             # return redirect(url_for('audio_records'))
         else:
             error = 'Invalid File Type'
@@ -136,11 +131,6 @@ def allowed_file(filename):
 
 def auto_analysis(record_id, filename):
     result = EmotionClassify.getEmotions(current_app.config['FILE_PATH'] + filename)
-    total_length = result[-1][1]
-    first_section_end = total_length // 3
-    last_section_start = first_section_end * 2
-    first_vote_dict = {}
-    last_vote_dict = {}
     for re in result:
         start_time = re[0]
         end_time = re[1]
@@ -148,50 +138,7 @@ def auto_analysis(record_id, filename):
         sr = StatusRecords(record_id=record_id, start_time=start_time, end_time=end_time, status=status)
         db.session.add(sr)
         db.session.commit()
-        if end_time <= first_section_end:
-            first_vote_dict[status] = first_vote_dict.get(status, 0) + (end_time - start_time)
-        elif first_section_end < end_time and first_section_end >= start_time:
-            first_vote_dict[status] = first_vote_dict.get(status, 0) + (first_section_end - start_time)
-        if start_time >= last_section_start:
-            last_vote_dict[status] = last_vote_dict.get(status, 0) + (end_time - start_time)
-        elif last_section_start > start_time and last_section_start <= end_time:
-            last_vote_dict[status] = last_vote_dict.get(status, 0) + (end_time - last_section_start)
-    first_section_emotion = labelEmotion(max(first_vote_dict, key=first_vote_dict.get))
-    last_section_emotion = labelEmotion(max(last_vote_dict, key=last_vote_dict.get))
-    result = last_section_emotion-first_section_emotion
-    # if first_section_emotion in negative_emotions:
-    #     if last_section_emotion in negative_emotions:
-    #         result = "no effort"
-    #     elif last_section_emotion in calm:
-    #         result = "good"
-    #     elif last_section_emotion in positive_emotions:
-    #         result = "excellent"
-    # elif first_section_emotion in calm:
-    #     if last_section_emotion in negative_emotions:
-    #         result = "bad"
-    #     elif last_section_emotion in calm:
-    #         result = "no effort"
-    #     elif last_section_emotion in positive_emotions:
-    #         result = "good"
-    # elif first_section_emotion in positive_emotions:
-    #     if last_section_emotion in negative_emotions:
-    #         result = "terrible"
-    #     elif last_section_emotion in calm:
-    #         result = "bad"
-    #     elif last_section_emotion in positive_emotions:
-    #         result = "no effort"
-    audio_record = AudioRecords.query.filter(record_id == record_id).first()
-    audio_record.result = result
-    db.session.commit()
 
-    return result
-def labelEmotion(emotion):
-    if emotion in positive_emotions:
-        return 1
-    elif emotion in calm:
-        return 0
-    elif emotion in negative_emotions:
-        return -1
 
 if __name__ == '__main__':
     app.config.from_object('settings.BaseConfig')
@@ -202,3 +149,4 @@ if __name__ == '__main__':
     app.config['SQLALCHEMY_ECHO'] = True
     EmotionClassify.loadModel(model_path=model_path)
     app.run()
+
