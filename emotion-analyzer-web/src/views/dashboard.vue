@@ -21,7 +21,7 @@
                     <chart-pie
                         style="height: 300px;"
                         :value="pieData"
-                        text="The Proportion Of Calling type"
+                        text="The Proportion of Calling type"
                     ></chart-pie>
                 </Card>
             </i-col>
@@ -55,15 +55,15 @@ export default {
     data() {
         return {
             inforCardData: [
-                { title: 'Number Of Total Call', icon: 'ios-headset-outline', count: 538, color: '#2d8cf0' },
-                { title: 'Number Of Positive Call', icon: 'md-thumbs-up', count: 317, color: '#19be6b' },
-                { title: 'Number Of Negative Call', icon: 'md-thumbs-down', count: 221, color: '#ed4014' }
+                { title: 'No. of Calls Received', icon: 'ios-headset-outline', count: 538, color: '#2d8cf0' },
+                { title: 'Number of Positive Call', icon: 'md-thumbs-up', count: 317, color: '#19be6b' },
+                { title: 'Number of Negative Call', icon: 'md-thumbs-down', count: 221, color: '#ed4014' }
             ],
             pieData: [
                 { value: 335, name: 'Insurance' },
                 { value: 135, name: 'Investment' },
                 { value: 1548, name: 'Credit card' },
-                { value: 310, name: 'Consultation' },
+                { value: 310, name: 'General Inquiry' },
                 { value: 234, name: 'Complaint' }
             ],
             barData: {

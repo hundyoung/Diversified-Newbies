@@ -58,9 +58,9 @@ export default {
     data() {
         return {
             inforCardData: [
-                { title: 'Number Of Total Call', icon: 'ios-headset-outline', count: 538, color: '#2d8cf0' },
-                { title: 'Number Of Positive Call', icon: 'md-thumbs-up', count: 317, color: '#19be6b' },
-                { title: 'Number Of Negative Call', icon: 'md-thumbs-down', count: 221, color: '#ed4014' }
+                { title: 'No. of Calls Received', icon: 'ios-headset-outline', count: 538, color: '#2d8cf0' },
+                { title: 'No. of Positive Call', icon: 'md-thumbs-up', count: 317, color: '#19be6b' },
+                { title: 'No. of Negative Call', icon: 'md-thumbs-down', count: 221, color: '#ed4014' }
             ]
         };
     },

@@ -24,7 +24,7 @@ export default {
         this.$nextTick(() => {
             let option = {
                 title: {
-                    text: 'The Positive Call Distribution',
+                    text: 'Performance Radar',
                     shadowColor: 'rgba(0, 0, 0, 0.5)',
                     shadowBlur: 20
                 },
@@ -43,7 +43,7 @@ export default {
                         { name: 'Insurance Business', max: 100 },
                         { name: 'Investment Business', max: 100 },
                         { name: 'Credit card business', max: 100 },
-                        { name: 'Consultation', max: 100 },
+                        { name: 'General Inquiry', max: 100 },
                         { name: 'Complaint', max: 100 }
                     ]
                 },

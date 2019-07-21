@@ -28,13 +28,13 @@ export default {
                 { value: 335, name: 'Insurance' },
                 { value: 135, name: 'Investment' },
                 { value: 1548, name: 'Credit card' },
-                { value: 310, name: 'Consultation' },
+                { value: 310, name: 'General Inquiry' },
                 { value: 234, name: 'Complaint' }
             ];
             let legend = data.map(_ => _.name);
             let option = {
                 title: {
-                    text: 'The Proportion Of Calling type',
+                    text: 'Inquiry Distribution',
                     shadowColor: 'rgba(0, 0, 0, 0.5)',
                     shadowBlur: 20
                 },

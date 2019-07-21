@@ -26,7 +26,7 @@ export default {
         }
         const option = {
             title: {
-                text: 'Last 7 Days Call Performance',
+                text: 'Performance of the Past 7 Days',
                 subtext: this.subtext
             },
             tooltip: {

@@ -52,7 +52,7 @@ export default {
                         data: [125, 131, 124, 145, 186, 127, 81]
                     },
                     {
-                        name: 'Consultation',
+                        name: 'General Inquiry',
                         stack: 'numberOfCall',
                         type: 'bar',
                         data: [253, 195, 78, 52, 165, 177, 88]

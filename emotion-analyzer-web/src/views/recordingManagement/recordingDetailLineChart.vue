@@ -16,7 +16,7 @@ export default {
     methods: {
         doDrawNewChart(charData) {
             this.charData = charData;
-            let tableXAxisData = [0];
+            let tableXAxisData = ["00:00"];
             let tableData = [0];
             if (this.charData && this.charData.length > 0) {
                 for (let i = 0; i < this.charData.length; i++) {
