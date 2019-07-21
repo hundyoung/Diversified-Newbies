@@ -33,18 +33,19 @@
                 <i-col span="6" class="formCol">
                     <Divider orientation="left"> Overall performance evaluation</Divider>
                     <div style="text-align:center">
-                        <span class="fa fa-thumbs-up fa-5x"></span>
+                        <Rate disabled v-model="recording.overall_evaluation" />
                     </div>
                 </i-col>
-                <i-col span="6" class="formCol">
+                <i-col span="18" class="formCol">
                     <Divider orientation="left">Sentiment Analyzer</Divider>
                     <div>
-                        <Timeline>
+                        <lineChart ref="lineChart" style="height: 300px;"></lineChart>
+                        <!-- <Timeline>
                             <TimelineItem v-for="item in recording.analyzer_result" :key="item.end_time">
                                 <p class="time">{{ item.start_time / 1000 }} - {{ item.end_time / 1000 }}</p>
                                 <p class="content">
                                     <span
-                                        v-if="item.status === 'female_happy' || item.status === 'male_angry'"
+                                        v-if="item.status === 'female_happy' || item.status === 'male_happy'"
                                         class="fa fa-smile-o fa-3x"
                                     ></span>
                                     <span
@@ -64,7 +65,7 @@
                                     ></span>
                                 </p>
                             </TimelineItem>
-                        </Timeline>
+                        </Timeline> -->
                     </div>
                 </i-col>
             </Row>
@@ -72,21 +73,31 @@
     </div>
 </template>
 <script>
+import lineChart from './recordingDetailLineChart';
 export default {
     name: 'recordingList',
-    components: {},
+    components: { lineChart },
     data() {
         return {
+            charData: [],
             recording: {}
         };
     },
-    methods: {},
+    methods: {
+        drawChart() {
+            this.$refs.lineChart.doDrawNewChart(this.recording.analyzer_result);
+        }
+    },
     mounted() {
         let vm = this;
         this.$ajax
             .get('/audio_details?record_id=' + this.$route.query.record_id)
             .then(function(response) {
                 vm.recording = response.data;
+                vm.recording.overall_evaluation = vm.recording.overall_evaluation
+                    ? vm.recording.overall_evaluation + 2
+                    : 3;
+                vm.drawChart();
             })
             .catch(function(error) {
                 console.error(error);

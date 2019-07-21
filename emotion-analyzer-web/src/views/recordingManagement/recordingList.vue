@@ -33,9 +33,12 @@
                 </Row>
             </Form>
             <Divider orientation="left" size="small">Data table</Divider>
-            <Table border stripe :columns="columns" :data="tableData" height="520">
+            <Table border stripe :columns="columns" :data="tableData" height="520" :loading="tableLoading">
                 <template slot-scope="{ row }" slot="record_name">
                     <strong>{{ row.record_name }}</strong>
+                </template>
+                <template slot-scope="{ row }" slot="overall_evaluation">
+                    <Rate disabled v-model="row.overall_evaluation" />
                 </template>
                 <template slot-scope="{ row }" slot="action">
                     <Button type="primary" size="small" style="margin-right: 5px" @click="view(row)">View</Button>
@@ -44,7 +47,7 @@
             </Table>
             <br />
             <div style="text-align:right">
-                <Page :total="100" show-elevator />
+                <Page :total="allData.length" :page-size="pageSize" show-elevator @on-change="changePage" />
             </div>
         </Card>
         <br />
@@ -57,31 +60,44 @@ export default {
     data() {
         return {
             searchObject: {},
+            pageSize: 10,
+            allData: [],
+            tableLoading: false,
             columns: [
                 {
                     title: 'Recording Name',
                     slot: 'record_name',
-                    align: 'center'
+                    align: 'center',
+                    width: 200
                 },
                 {
                     title: 'Employee Id',
                     key: 'employee_id',
+                    align: 'center',
+                    width: 120
+                },
+                {
+                    title: 'overall evaluation',
+                    slot: 'overall_evaluation',
                     align: 'center'
                 },
                 {
                     title: 'Record Date',
                     key: 'record_date',
-                    align: 'center'
+                    align: 'center',
+                    width: 200
                 },
                 {
                     title: 'Record Id',
                     key: 'record_id',
-                    align: 'center'
+                    align: 'center',
+                    width: 120
                 },
                 {
                     title: 'Customer Id',
                     key: 'customer_id',
-                    align: 'center'
+                    align: 'center',
+                    width: 120
                 },
                 {
                     title: 'Action',
@@ -105,17 +121,44 @@ export default {
                 }
             });
         },
+        changePage(page) {
+            let vm = this;
+            this.tableLoading = true;
+            this.tableData = [];
+            let begin = (page - 1) * this.pageSize;
+            let end = this.pageSize * (page - 1) + 10;
+            if (end > this.allData.length) {
+                end = this.allData.length;
+            }
+            for (let i = begin; i < end; i++) {
+                this.tableData.push(this.allData[i]);
+            }
+            vm.$nextTick(function() {
+                vm.tableLoading = false;
+            });
+        },
         remove() {}
     },
     mounted() {
         let vm = this;
+        vm.tableLoading = true;
         this.$ajax
             .get('/audio_records')
             .then(function(response) {
-                vm.tableData = response.data;
-                console.log(vm.tableData);
+                vm.allData = response.data;
+                for (let i = 0; i < vm.allData.length; i++) {
+                    vm.allData[i].overall_evaluation = vm.allData[i].overall_evaluation
+                        ? vm.allData[i].overall_evaluation + 2
+                        : 3;
+                }
+                vm.tableData = [];
+                for (let i = 0; i < vm.pageSize; i++) {
+                    vm.tableData.push(vm.allData[i]);
+                }
+                vm.tableLoading = false;
             })
             .catch(function(error) {
+                vm.tableLoading = false;
                 console.log(error);
             });
     }
