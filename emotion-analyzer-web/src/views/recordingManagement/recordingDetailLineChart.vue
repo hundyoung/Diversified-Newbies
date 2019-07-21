@@ -54,7 +54,7 @@ export default {
                 ],
                 series: [
                     {
-                        name: 'Positive Call Proportion',
+                        name: 'Sentiment',
                         type: 'line',
                         lineStyle: {
                             color: '#2d8cf0',

@@ -11,12 +11,12 @@
             >
                 <Row>
                     <i-col span="6" class="formCol">
-                        <FormItem label="Employee Id">
+                        <FormItem label="Employee ID">
                             <Input v-model="uploadDataObject.employee_id" readonly />
                         </FormItem>
                     </i-col>
                     <i-col span="6" class="formCol">
-                        <FormItem label="Record Id">
+                        <FormItem label="Customer ID">
                             <Input v-model="uploadDataObject.customer_id" readonly />
                         </FormItem>
                     </i-col>

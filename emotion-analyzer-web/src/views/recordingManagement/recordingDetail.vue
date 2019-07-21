@@ -12,7 +12,7 @@
                         </FormItem>
                     </i-col>
                     <i-col span="6" class="formCol">
-                        <FormItem label="Employee Id">
+                        <FormItem label="Employee ID">
                             <Input v-model="recording.employee_id" readonly></Input>
                         </FormItem>
                     </i-col>

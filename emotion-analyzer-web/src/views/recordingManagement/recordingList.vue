@@ -71,7 +71,7 @@ export default {
                     width: 200
                 },
                 {
-                    title: 'Employee Id',
+                    title: 'Employee ID',
                     key: 'employee_id',
                     align: 'center',
                     width: 120
@@ -88,13 +88,13 @@ export default {
                     width: 200
                 },
                 {
-                    title: 'Record Id',
+                    title: 'Record ID',
                     key: 'record_id',
                     align: 'center',
                     width: 120
                 },
                 {
-                    title: 'Customer Id',
+                    title: 'Customer ID',
                     key: 'customer_id',
                     align: 'center',
                     width: 120
